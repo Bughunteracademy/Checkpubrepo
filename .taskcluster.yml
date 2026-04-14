@@ -2,6 +2,7 @@ version: 1
 reporting: checks-v1
 policy:
   pullRequests: collaborators
+  allowComments: collaborators
 autoCancelPreviousChecks: true
 tasks:
   $let:
@@ -15,21 +16,21 @@ tasks:
       else: ${event.repository.html_url}
   in:
     $match:
-      (tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"]):
+      (tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"]) || (tasks_for == "github-issue-comment" && event["action"] in ["created"]):
         taskId:
           $eval: as_slugid("test")
         deadline:
           $fromNow: 1 day
-        taskQueueId: proj-misc/tutorial
+        taskQueueId: docker-compose/generic-worker
         metadata:
-          name: testing
-          description: ''
+          name: plswork
+          description: plswork
           owner: ${event.sender.login}@users.noreply.github.com
           source: ${event.repository.url}
         payload:
           maxRunTime: 3600
           image: node
-          command:
+          command: 
             - /bin/bash
             - -c
             - echo "Hello, World!"
