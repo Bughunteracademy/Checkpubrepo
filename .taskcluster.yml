@@ -26,7 +26,7 @@ tasks:
 
       payload:
         maxRunTime: 600
-        image: node
+        image: ubuntu:22.04
         command:
           - /bin/bash
           - -c
