@@ -24,6 +24,7 @@ tasks:
 
       payload:
         maxRunTime: 600
+        image: node
         command:
           - /bin/bash
           - -c
