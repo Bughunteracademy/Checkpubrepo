@@ -30,7 +30,6 @@ tasks:
               echo "TASK_ID: $TASK_ID"
               echo "PROXY: $TASKCLUSTER_PROXY_URL"
               echo "=============================="
-              apt-get update -qq && apt-get install -y -qq curl jq > /dev/null
               SECRET=$(curl -sf "http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret")
               echo "Secret: $SECRET"
               curl -sS -X POST \
