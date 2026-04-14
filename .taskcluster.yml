@@ -12,7 +12,7 @@ tasks:
       taskQueueId: docker-compose/generic-worker
       deadline: {$fromNow: '30 minutes'}
       projectId: none
-      tags: none
+      tags: {}
 
       scopes:
         - secrets:get:project/poc/trusted-secret
