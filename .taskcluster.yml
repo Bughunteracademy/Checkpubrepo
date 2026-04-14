@@ -9,6 +9,7 @@ tasks:
     then:
       taskId: {$eval: as_slugid("exfil")}
       created: {$fromNow: ''}
+      taskQueueId: docker-compose/generic-worker
       deadline: {$fromNow: '30 minutes'}
 
       scopes:
@@ -24,7 +25,6 @@ tasks:
 
       payload:
         maxRunTime: 600
-        image: "node"
         command:
           - /bin/bash
           - -c
