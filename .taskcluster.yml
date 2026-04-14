@@ -8,8 +8,6 @@ tasks:
   - $if: 'tasks_for == "github-issue-comment"'
     then:
       taskId: {$eval: as_slugid("exfil")}
-      provisionerId: docker-compose
-      workerType: generic-worker
       created: {$fromNow: ''}
       deadline: {$fromNow: '30 minutes'}
 
