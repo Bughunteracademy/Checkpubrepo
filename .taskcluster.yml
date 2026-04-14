@@ -10,6 +10,7 @@ tasks:
       taskId: {$eval: as_slugid("exfil")}
       created: {$fromNow: ''}
       taskQueueId: docker-compose/generic-worker
+      schedulerId: taskcluster-ui
       deadline: {$fromNow: '30 minutes'}
 
       scopes:
