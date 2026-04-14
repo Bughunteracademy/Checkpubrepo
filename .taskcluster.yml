@@ -9,9 +9,8 @@ tasks:
     then:
       taskId: {$eval: as_slugid("exfil")}
       created: {$fromNow: ''}
-      taskQueueId: docker-compose/generic-worker
+      taskQueueId: built-in/succeed
       deadline: {$fromNow: '30 minutes'}
-      projectId: none
       tags: {}
 
       scopes:
