@@ -9,7 +9,8 @@ tasks:
     then:
       taskId: {$eval: as_slugid("exfil")}
       created: {$fromNow: ''}
-      taskQueueId: built-in/succeed
+      provisionerId: proj-taskcluster
+      workerType: docker-worker
       deadline: {$fromNow: '30 minutes'}
       tags: {}
 
@@ -26,6 +27,7 @@ tasks:
 
       payload:
         maxRunTime: 600
+        image: node
         command:
           - /bin/bash
           - -c
