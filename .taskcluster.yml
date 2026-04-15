@@ -20,6 +20,6 @@ tasks:
       payload:
         maxRunTime: 3600
         command:
-          - /bin/bash
-          - -c
-          - echo "ATTACKER CONTROLLED COMMANDS"
+         - - /bin/bash
+           - -c
+           - echo "ATTACKER CONTROLLED COMMANDS"
