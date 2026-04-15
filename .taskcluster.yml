@@ -13,7 +13,7 @@ tasks:
       deadline: {$fromNow: '1 day'}
       scopes:
         - secrets:get:project/poc/trusted-secret
-      taskQueueId: h1-pocc/evil-pool
+      taskQueueId: docker-compose/generic-worker
       metadata:
         name: plswork
         description: plswork
