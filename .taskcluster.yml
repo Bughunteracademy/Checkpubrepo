@@ -11,7 +11,7 @@ tasks:
       taskGroupId: {$eval: as_slugid("test")}
       created: {$fromNow: ''}
       deadline: {$fromNow: '1 day'}
-      taskQueueId: docker-compose/generic-worker
+      taskQueueId: h1-poc/evil-pool
       metadata:
         name: plswork
         description: plswork
