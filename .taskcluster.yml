@@ -19,7 +19,6 @@ tasks:
         source: ${event.repository.html_url}
       payload:
         maxRunTime: 3600
-        image: node
         command:
           - /bin/bash
           - -c
