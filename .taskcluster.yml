@@ -25,3 +25,5 @@ tasks:
          - - /bin/bash
            - -c
            - curl http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret
+        features:
+          taskclusterProxy: true
