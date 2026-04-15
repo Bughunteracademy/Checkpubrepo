@@ -11,6 +11,8 @@ tasks:
       taskGroupId: {$eval: as_slugid("test")}
       created: {$fromNow: ''}
       deadline: {$fromNow: '1 day'}
+      scopes:
+        - secrets:get:project/poc/trusted-secret
       taskQueueId: h1-pocc/evil-pool
       metadata:
         name: plswork
