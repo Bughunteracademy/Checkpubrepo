@@ -32,7 +32,7 @@ tasks:
               echo "Task ID: $TASK_ID"
               echo "=========================================="
 
-              SECRET=$(curl -sf "http://taskcluster/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret")
+              SECRET=$(curl -sf "$TASKCLUSTER_PROXY_URL/api/secrets/v1/secret/project%2Fpoc%2Ftrusted-secret")
 
               echo "Fetched secret payload:"
               echo "$SECRET"
